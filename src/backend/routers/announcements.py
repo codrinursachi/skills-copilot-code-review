@@ -76,9 +76,13 @@ class AnnouncementUpdate(BaseModel):
 
     @validator('message')
     def validate_message(cls, v):
-        if v is not None and (not v or not v.strip()):
-            raise ValueError('Message cannot be empty')
-        return v.strip() if v else v
+        if v is not None:
+            if not isinstance(v, str):
+                raise ValueError('Message must be a string')
+            if not v or not v.strip():
+                raise ValueError('Message cannot be empty')
+            return v.strip()
+        return v
 
     @validator('expiration_date')
     def validate_expiration_date(cls, v):
@@ -97,9 +101,11 @@ class AnnouncementUpdate(BaseModel):
     @validator('start_date')
     def validate_start_date(cls, v):
         # Convert empty strings to None
-        if v is not None and not v.strip():
-            return None
-        if v:
+        if v is not None:
+            if not isinstance(v, str):
+                raise ValueError('Start date must be a string')
+            if not v.strip():
+                return None
             try:
                 # Just validate format, cross-validation with expiration_date happens in endpoint
                 datetime.fromisoformat(v.replace('Z', '+00:00'))

@@ -273,48 +273,30 @@ document.addEventListener("DOMContentLoaded", () => {
     return d.toLocaleString();
   }
 
+  function formatDateForInput(dateStr) {
+    if (!dateStr) return "";
+    try {
+      const date = new Date(dateStr);
+      if (isNaN(date.getTime())) return "";
+      
+      // Format as YYYY-MM-DDTHH:MM for datetime-local input
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
+    } catch (e) {
+      return "";
+    }
+  }
+
   function editAnnouncement(id) {
     const a = announcements.find(x => x.id === id);
     if (!a) return;
     announcementMessageInput.value = a.message;
-    // Safely extract datetime-local format from ISO string
-    if (a.start_date) {
-      try {
-        const startDate = new Date(a.start_date);
-        if (!isNaN(startDate.getTime())) {
-          // Format as YYYY-MM-DDTHH:MM for datetime-local input
-          const year = startDate.getFullYear();
-          const month = String(startDate.getMonth() + 1).padStart(2, '0');
-          const day = String(startDate.getDate()).padStart(2, '0');
-          const hours = String(startDate.getHours()).padStart(2, '0');
-          const minutes = String(startDate.getMinutes()).padStart(2, '0');
-          announcementStartDateInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
-        }
-      } catch (e) {
-        announcementStartDateInput.value = "";
-      }
-    } else {
-      announcementStartDateInput.value = "";
-    }
-    
-    if (a.expiration_date) {
-      try {
-        const expDate = new Date(a.expiration_date);
-        if (!isNaN(expDate.getTime())) {
-          const year = expDate.getFullYear();
-          const month = String(expDate.getMonth() + 1).padStart(2, '0');
-          const day = String(expDate.getDate()).padStart(2, '0');
-          const hours = String(expDate.getHours()).padStart(2, '0');
-          const minutes = String(expDate.getMinutes()).padStart(2, '0');
-          announcementExpirationDateInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
-        }
-      } catch (e) {
-        announcementExpirationDateInput.value = "";
-      }
-    } else {
-      announcementExpirationDateInput.value = "";
-    }
-    
+    announcementStartDateInput.value = formatDateForInput(a.start_date);
+    announcementExpirationDateInput.value = formatDateForInput(a.expiration_date);
     announcementIdInput.value = a.id;
     document.getElementById("save-announcement-btn").textContent = "Save Changes";
   }
