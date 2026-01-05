@@ -82,7 +82,7 @@ class AnnouncementUpdate(BaseModel):
 
     @validator('expiration_date')
     def validate_expiration_date(cls, v):
-        if v and v.strip():
+        if v is not None and v.strip():
             try:
                 exp_date = datetime.fromisoformat(v.replace('Z', '+00:00'))
                 if exp_date <= datetime.utcnow():
@@ -91,22 +91,21 @@ class AnnouncementUpdate(BaseModel):
                 if 'must be in the future' in str(e):
                     raise e
                 raise ValueError('Invalid expiration date format')
-        return v if v and v.strip() else None
+            return v
+        return None
 
     @validator('start_date')
-    def validate_start_date(cls, v, values):
-        if v and v.strip():
+    def validate_start_date(cls, v):
+        # Convert empty strings to None
+        if v is not None and not v.strip():
+            return None
+        if v:
             try:
-                start = datetime.fromisoformat(v.replace('Z', '+00:00'))
-                if 'expiration_date' in values and values['expiration_date']:
-                    exp = datetime.fromisoformat(values['expiration_date'].replace('Z', '+00:00'))
-                    if start >= exp:
-                        raise ValueError('Start date must be before expiration date')
-            except (ValueError, TypeError) as e:
-                if 'must be before' in str(e):
-                    raise e
+                # Just validate format, cross-validation with expiration_date happens in endpoint
+                datetime.fromisoformat(v.replace('Z', '+00:00'))
+            except (ValueError, TypeError):
                 raise ValueError('Invalid start date format')
-        return v if v and v.strip() else None
+        return v
 
 
 def announcement_dict(doc):
@@ -165,15 +164,27 @@ def update_announcement(announcement_id: str, announcement: AnnouncementUpdate =
         update["message"] = announcement.message
     if announcement.expiration_date is not None:
         update["expiration_date"] = announcement.expiration_date
-    if announcement.start_date:
+    if announcement.start_date is not None:
         update["start_date"] = announcement.start_date
-    elif announcement.start_date is None:
-        # Explicitly set to None if empty string was provided
-        update["start_date"] = None
     
     if not update:
         # No changes needed, return existing document
         return announcement_dict(doc)
+    
+    # Validate date logic with existing values
+    final_start = update.get("start_date", doc.get("start_date"))
+    final_expiration = update.get("expiration_date", doc.get("expiration_date"))
+    
+    if final_start and final_expiration:
+        try:
+            start_dt = datetime.fromisoformat(final_start.replace('Z', '+00:00'))
+            exp_dt = datetime.fromisoformat(final_expiration.replace('Z', '+00:00'))
+            if start_dt >= exp_dt:
+                raise HTTPException(status_code=400, detail="Start date must be before expiration date.")
+        except ValueError as e:
+            if "must be before" not in str(e):
+                raise HTTPException(status_code=400, detail="Invalid date format.")
+            raise
     
     announcements_collection.update_one({"_id": obj_id}, {"$set": update})
     updated_doc = announcements_collection.find_one({"_id": obj_id})
