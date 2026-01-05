@@ -28,6 +28,10 @@
           <button id="logout-button">Logout</button>
         </div>
       </div>
+      <button id="manage-announcements-btn" class="icon-button hidden">
+        <span class="announcement-icon">📢</span>
+        <span>Manage Announcements</span>
+      </button>
     </div>
   </header>
 
@@ -136,6 +140,31 @@
     </div>
   </div>
 
+  <!-- Announcements Modal -->
+  <div id="announcements-modal" class="modal hidden">
+    <div class="modal-content announcements-modal-content">
+      <span class="close-announcements-modal">&times;</span>
+      <h3>Manage Announcements</h3>
+      <div id="announcements-list"></div>
+      <form id="announcement-form">
+        <div class="form-group">
+          <label for="announcement-message">Message:</label>
+          <input type="text" id="announcement-message" required placeholder="Announcement message" />
+        </div>
+        <div class="form-group">
+          <label for="announcement-start-date">Start Date (optional):</label>
+          <input type="datetime-local" id="announcement-start-date" />
+        </div>
+        <div class="form-group">
+          <label for="announcement-expiration-date">Expiration Date:</label>
+          <input type="datetime-local" id="announcement-expiration-date" required />
+        </div>
+        <input type="hidden" id="announcement-id" value="" />
+        <button type="submit" id="save-announcement-btn">Add Announcement</button>
+      </form>
+      <div id="announcement-modal-message" class="hidden message"></div>
+    </div>
+  </div>
   <script src="app.js"></script>
 </body>
 

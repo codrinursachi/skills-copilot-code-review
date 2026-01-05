@@ -1,3 +1,101 @@
+/* Announcements Modal Styles */
+#announcements-modal .announcements-modal-content {
+  max-width: 500px;
+  margin: auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  padding: 32px 24px 24px 24px;
+  position: relative;
+}
+#announcements-modal h3 {
+  margin-top: 0;
+  font-size: 1.5em;
+  color: #3949ab;
+}
+#announcements-list {
+  margin-bottom: 24px;
+}
+.announcement-item {
+  background: #f3f6fb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+}
+.announcement-message {
+  font-size: 1.1em;
+  margin-bottom: 6px;
+  color: #222;
+}
+.announcement-dates {
+  font-size: 0.95em;
+  color: #666;
+  margin-bottom: 8px;
+}
+.announcement-actions {
+  display: flex;
+  gap: 8px;
+}
+.edit-announcement-btn, .delete-announcement-btn {
+  background: #e8eaf6;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 12px;
+  cursor: pointer;
+  font-size: 0.95em;
+  transition: background 0.2s;
+}
+.edit-announcement-btn:hover {
+  background: #c5cae9;
+}
+.delete-announcement-btn {
+  background: #ffcdd2;
+  color: #b71c1c;
+}
+.delete-announcement-btn:hover {
+  background: #e57373;
+}
+#announcement-form {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+#announcement-form .form-group {
+  display: flex;
+  flex-direction: column;
+}
+#announcement-form label {
+  font-size: 0.98em;
+  margin-bottom: 4px;
+  color: #3949ab;
+}
+#announcement-form input[type="text"],
+#announcement-form input[type="datetime-local"] {
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #bdbdbd;
+  font-size: 1em;
+}
+#save-announcement-btn {
+  background: #3949ab;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#save-announcement-btn:hover {
+  background: #283593;
+}
+#announcement-modal-message {
+  margin-top: 10px;
+}
 /* Color palette */
 :root {
   /* Primary colors */
