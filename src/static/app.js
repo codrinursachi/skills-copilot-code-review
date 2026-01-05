@@ -4,12 +4,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const announcementClose = document.querySelector(".announcement-close");
   
   // Check if banner was previously dismissed
-  if (localStorage.getItem("announcementDismissed") === "true") {
+  if (announcementBanner && localStorage.getItem("announcementDismissed") === "true") {
     announcementBanner.classList.add("dismissed");
   }
   
   // Handle banner dismissal
-  if (announcementClose) {
+  if (announcementBanner && announcementClose) {
     announcementClose.addEventListener("click", () => {
       announcementBanner.classList.add("dismissed");
       localStorage.setItem("announcementDismissed", "true");
