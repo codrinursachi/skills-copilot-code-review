@@ -47,8 +47,17 @@ def init_database():
     # Initialize teacher accounts if empty
     if teachers_collection.count_documents({}) == 0:
         for teacher in initial_teachers:
-            teachers_collection.insert_one(
-                {"_id": teacher["username"], **teacher})
+            teachers_collection.insert_one({"_id": teacher["username"], **teacher})
+
+    # Initialize announcements if empty
+    announcements_collection = db['announcements']
+    if announcements_collection.count_documents({}) == 0:
+        announcements_collection.insert_one({
+            "message": "Welcome to Mergington High! School resumes January 8th.",
+            "start_date": None,
+            "expiration_date": "2026-01-12T23:59:59Z",
+            "created_by": "principal"
+        })
 
 
 # Initial database if empty
